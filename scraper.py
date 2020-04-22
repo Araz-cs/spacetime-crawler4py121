@@ -1,9 +1,9 @@
 import re
 from urllib.parse import urlparse
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import requests
 
-scraped = set() # set of urls we've extracted from
+scraped = set() # set of urls we've extracted from or are blacklisted
 seen = set()
 
 def scraper(url, resp):
@@ -11,13 +11,23 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
-    if (resp.status >= 400) or resp.status == 204 or url in scraped:
+    if (resp.status >= 400 or resp.status == 204) or (url in scraped):
+        scraped.add(url)
         return list()
 
     #Implementation requred.
     #print("in extract_next_links")
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
+    
+    for tag in soup(text=lambda text: isinstance(text,Comment)):
+        tag.extract()
 
+    for element in soup.findAll(['script', 'style']):
+        element.extract() 
+
+    print(url)
+    print(soup.get_text())
+   # tokenize(soup.get_text())
     links = set()
     
     for link in soup.find_all('a'):
@@ -27,9 +37,9 @@ def extract_next_links(url, resp):
             links.add(childURL) 
             seen.add(childURL) 
 
-    for link in links:
-        print (link)
-
+    #for link in links:
+        #print (link)
+        
     scraped.add(url)
     return list(links)
 
