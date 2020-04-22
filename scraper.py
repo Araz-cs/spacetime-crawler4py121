@@ -5,12 +5,13 @@ import requests
 
 scraped = set() # set of urls we've extracted from
 seen = set()
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
-    if (resp.status >= 400 and resp.status <= 605) or url in scraped:
+    if (resp.status >= 400) or resp.status == 204 or url in scraped:
         return list()
 
     #Implementation requred.
