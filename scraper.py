@@ -3,30 +3,34 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 import requests
 
+scraped = set() # set of urls we've extracted from
+seen = set()
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
-    if resp.status >= 400 and resp.status <= 605:
+    if (resp.status >= 400 and resp.status <= 605) or url in scraped:
         return list()
 
     #Implementation requred.
     #print("in extract_next_links")
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
 
-    seen = set()
+    links = set()
     
     for link in soup.find_all('a'):
     # get absolute urls here before adding to listLInks()
         childURL = link.get('href')
-        if is_valid(childURL):
-            seen.add(childURL)  
-            #print(childURL)
+        if is_valid(childURL) and childURL not in seen:
+            links.add(childURL) 
+            seen.add(childURL) 
 
-    for link in seen:
+    for link in links:
         print (link)
-    return list(seen)
+
+    scraped.add(url)
+    return list(links)
 
 
 def is_valid(url):
