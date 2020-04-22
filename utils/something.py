@@ -21,9 +21,7 @@ def tokenize(texts):
             else:
                 term =""
 
-    # # this is used to check if length of # is 3 or more
-    # if (len(term)) > 3:
-    #     termList.append(term)
+
 
     # loops to check if token is already in dic then add one
     # if token is not in dic add 1
