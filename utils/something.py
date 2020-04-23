@@ -1,7 +1,8 @@
-import sys
-# My tokenize function's runtime is O(n)
-# I run through the file once by checking if they are characters
-# then words
+# utils.py
+
+
+
+# tokenize function's runtime is O(n)
 def tokenize(texts):
 # I used the split method to check if file is
 
@@ -21,8 +22,6 @@ def tokenize(texts):
             else:
                 term =""
 
-
-
     # loops to check if token is already in dic then add one
     # if token is not in dic add 1
     dict={}
@@ -33,11 +32,24 @@ def tokenize(texts):
             dict[i] = 1
     return dict
 
+stopWords = {"a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been",
+"before", "being", "below", "between", "both", "but", "by", "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down",
+"during","each","few","for","from","further","had","hadn't","has","hasn't","have","haven't","having","he","he'd","he'll","he's","her","here","here's",
+"hers","herself","him","himself","his","how","how's","i","i'd","i'll","i'm","i've","if","in","into","is","isn't","it","it's","its","itself","let's","me","more",
+"most","mustn't","my","myself","no""nor","not","of","off","on","once","only","or","other","ought","our","ours","ourselves","out","over","own","same",
+"shan't","she","she'd","she'll","she's","should","shouldn'tso","some","such","than","that","that's","the","their","theirs","them","themselves","then","there",
+"there's","these","they","they'd","they'll","they're","they've","this","those","through","to","too","under","until","up","very","was","wasn't","we",
+"we'd","we'll","we're","we've","were","weren't","what","what's","when","when's","where","where's","which","while","who","who's","whom","why","why's","with",
+"won't","would","wouldn't","you","you'd","you'll","you're","you've","your","yours","yourself","yourselves"}
 
-
-if __name__ == "__main__":
-    text = "WOLF, meeting with a Lamb astray from the fold, resolved not to\
-    lay violent hands on him, but to find !! some plea {{to justify to the\
-    Lamb the Wolf's right to $$$eat him.  He thus addressed him:"
-    x = tokenize(text)
-    print(x)
+# This function answers problem 3, and writes it to a file.
+def problem3():
+    f = open("P3wordlist.txt", "w+")
+    counter = 0
+    for k, v in sorted(all_tokens.items(), key = lambda x: -x[1]):
+        if k not in stopWords:
+            f.write(k + "=" + str(v))
+            counter += 1
+        if counter == 50:
+            break
+    f.close()
