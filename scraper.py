@@ -38,8 +38,9 @@ def extract_next_links(url, resp):
     for link in soup.find_all('a'):
     # get absolute urls here before adding to listLInks()
         childURL = link.get('href')
+
         if is_valid(childURL) and childURL not in seen:
-            print(childURL)
+            #print(childURL)
             links.add(childURL) 
             seen.add(childURL) 
 
@@ -75,7 +76,8 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
             return False
         # This is a good URL, we can use it
-        unique_urls.add(parsed.path.lower())
+        unique_urls.add(parsed.netloc)
+        return True
 
 
     except TypeError:
@@ -94,4 +96,3 @@ def printList():
         f.write(word + "\n")
 
     f.close()
-        
