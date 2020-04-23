@@ -2,9 +2,12 @@ import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup, Comment
 import requests
+import time
 
-scraped = set() # set of urls we've extracted from or are blacklisted
+scraped = set()  # set of urls we've extracted from or are blacklisted
 seen = set()
+unique_urls = set()
+
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -12,7 +15,6 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     if (resp.status >= 400 or resp.status == 204) or (url in scraped):
-        scraped.add(url)
         return list()
 
     #Implementation requred.
@@ -25,8 +27,11 @@ def extract_next_links(url, resp):
     for element in soup.findAll(['script', 'style']):
         element.extract() 
 
-    print(url)
-    print(soup.get_text())
+    #this is what to send to the tokenizer
+    webtext = soup.get_text()
+
+    #print(url)
+    #print(soup.get_text())
    # tokenize(soup.get_text())
     links = set()
     
@@ -34,6 +39,7 @@ def extract_next_links(url, resp):
     # get absolute urls here before adding to listLInks()
         childURL = link.get('href')
         if is_valid(childURL) and childURL not in seen:
+            print(childURL)
             links.add(childURL) 
             seen.add(childURL) 
 
@@ -45,13 +51,20 @@ def extract_next_links(url, resp):
 
 
 def is_valid(url):
+    #valid_domains = [".ics.uci.edu", ".cs.uci.edu", ".informatics.uci.edu", ".stat.uci.edu", "today.uci.edu/department/information_computer_sciences"]
     try:
         parsed = urlparse(url)
+
         if parsed.scheme not in set(["http", "https", "today"]):
             return False
-        if parsed.netloc not in set(["www.ics.uci.edu", "www.cs.uci.edu", "www.informatics.uci.edu", "www.stat.uci.edu", "today.uci.edu/department/information_computer_sciences"]):
+       # if not any(x in parsed.netloc for x in valid_domains):
+        #    return False
+        #if parsed.netloc not in set(["www.ics.uci.edu", "www.cs.uci.edu", "www.informatics.uci.edu", "www.stat.uci.edu", "today.uci.edu/department/information_computer_sciences"]):
+         #   return False
+        if not re.match(
+            r'^(\w*.*)(ics.uci.edu|cs.uci.edu|stat.uci.edu|today.uci.edu\/department\/information_computer_sciences)$',parsed.netloc):
             return False
-        return not re.match(
+        if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
@@ -59,8 +72,26 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
+            return False
+        # This is a good URL, we can use it
+        unique_urls.add(parsed.path.lower())
+
 
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+def printList():
+    f = open("URLS.txt", "a")
+
+    for word in scraped:
+        f.write(word + "\n")
+
+    f.write("\n\n\n\nUNIQUE URLS")
+
+    for word in unique_urls:
+        f.write(word + "\n")
+
+    f.close()
+        

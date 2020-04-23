@@ -19,7 +19,13 @@ class Worker(Thread):
             if not tbd_url:
                 self.logger.info("Frontier is empty. Stopping Crawler.")
                 break
+            # if we've accessed tbd_url domain within 500ms then sleep
+            #   sleep(500ms)
+            #
+            #
             resp = download(tbd_url, self.config, self.logger)
+            # store tbh_url accessed at current time.
+            #
             self.logger.info(
                 f"Downloaded {tbd_url}, status <{resp.status}>, "
                 f"using cache {self.config.cache_server}.")
