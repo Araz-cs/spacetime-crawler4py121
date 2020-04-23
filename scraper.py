@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup, Comment
 import requests
 import time
+import utils.something as util
 
 scraped = set()  # set of urls we've extracted from or are blacklisted
 seen = set()
@@ -20,33 +21,37 @@ def extract_next_links(url, resp):
     #Implementation requred.
     #print("in extract_next_links")
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
-    
+
     for tag in soup(text=lambda text: isinstance(text,Comment)):
         tag.extract()
 
     for element in soup.findAll(['script', 'style']):
-        element.extract() 
+        element.extract()
 
     #this is what to send to the tokenizer
     webtext = soup.get_text()
 
     #print(url)
     #print(soup.get_text())
-   # tokenize(soup.get_text())
+
+
+    # this will tokenize the webtext
+    # util.tokenize(webtext)
+
     links = set()
-    
+
     for link in soup.find_all('a'):
     # get absolute urls here before adding to listLInks()
         childURL = link.get('href')
 
         if is_valid(childURL) and childURL not in seen:
             #print(childURL)
-            links.add(childURL) 
-            seen.add(childURL) 
+            links.add(childURL)
+            seen.add(childURL)
 
     #for link in links:
         #print (link)
-        
+
     scraped.add(url)
     return list(links)
 
