@@ -1,3 +1,5 @@
+from crawler.database import DataBase as d
+
 # utils.py
 
 
@@ -24,13 +26,11 @@ def tokenize(texts):
 
     # loops to check if token is already in dic then add one
     # if token is not in dic add 1
-    dict={}
     for i in termList:
-        if i in dict:
-            dict[i] += 1
+        if i in d.allTokens:
+            d.allTokens[i] += 1
         else:
-            dict[i] = 1
-    return dict
+            d.allTokens[i] = 1
 
 stopWords = {"a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been",
 "before", "being", "below", "between", "both", "but", "by", "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down",
@@ -46,7 +46,7 @@ stopWords = {"a", "about", "above", "after", "again", "against", "all", "am", "a
 def problem3():
     f = open("P3wordlist.txt", "w+")
     counter = 0
-    for k, v in sorted(all_tokens.items(), key = lambda x: -x[1]):
+    for k, v in sorted(d.allTokens.items(), key = lambda x: -x[1]):
         if k not in stopWords:
             f.write(k + "=" + str(v))
             counter += 1
