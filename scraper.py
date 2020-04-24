@@ -4,10 +4,11 @@ from bs4 import BeautifulSoup, Comment
 import requests
 import time
 import utils.something as util
+from crawler.database import DataBase as d
 
-scraped = set()  # set of urls we've extracted from or are blacklisted
-seen = set()
-unique_urls = set()
+# scraped = set()  # set of urls we've extracted from or are blacklisted
+# seen = set()
+# unique_urls = set()
 
 
 def scraper(url, resp):
@@ -15,7 +16,7 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
-    if (resp.status >= 400 or resp.status == 204) or (url in scraped):
+    if (resp.status >= 400 or resp.status == 204) or (url in d.scraped):
         return list()
 
     #Implementation requred.
@@ -44,15 +45,15 @@ def extract_next_links(url, resp):
     # get absolute urls here before adding to listLInks()
         childURL = link.get('href')
 
-        if is_valid(childURL) and childURL not in seen:
+        if is_valid(childURL) and childURL not in d.seen:
             #print(childURL)
             links.add(childURL)
-            seen.add(childURL)
+            d.seen.add(childURL)
 
     #for link in links:
         #print (link)
 
-    scraped.add(url)
+    d.scraped.add(url)
     return list(links)
 
 
@@ -81,7 +82,7 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
             return False
         # This is a good URL, we can use it
-        unique_urls.add(parsed.netloc)
+        d.unique_urls.add(parsed.netloc)
         return True
 
 
@@ -92,12 +93,12 @@ def is_valid(url):
 def printList():
     f = open("URLS.txt", "a")
 
-    for word in scraped:
+    for word in d.scraped:
         f.write(word + "\n")
 
     f.write("\n\n\n\nUNIQUE URLS")
 
-    for word in unique_urls:
+    for word in d.unique_urls:
         f.write(word + "\n")
 
     f.close()
