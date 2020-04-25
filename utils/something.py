@@ -49,6 +49,7 @@ def problem3():
     for k, v in sorted(d.allTokens.items(), key = lambda x: -x[1]):
         if k not in stopWords:
             f.write(k + "=" + str(v))
+            f.write("\n")
             counter += 1
         if counter == 70:
             break
