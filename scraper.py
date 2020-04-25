@@ -12,23 +12,28 @@ from crawler.database import DataBase as d
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
-    return [link for link in links if is_valid(link)]
-
+    if links != None:
+        return [link for link in links if is_valid(link)]
+    else: 
+        return list()
 def extract_next_links(url, resp):
     if (resp.status >= 400 or resp.status == 204) or (url in d.scraped):
         d.blacklistURL.add(url)
-        return
+        print("*******************************")
+        return list()
 
-    if (resp.raw_response.status_code <= 200 ):
-        if (int(resp.raw_response.headers._store["content-length"][1]) > 150000): 
-            d.blacklistURL.add(url) 
-            return
-        elif (int(resp.raw_response.headers._store["content-length"][1]) < 550): 
-            d.blacklistURL.add(url)
-            return
-        elif "text" not in (resp.raw_response.headers._store["content-type"]):
-            d.blacklistURL.add(url)
-            return
+    # if (int(resp.raw_response.headers.get_all("Content-Length")[0]) > 150000): 
+    #     d.blacklistURL.add(url)
+    #     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@") 
+    #     return list()
+    # elif (int(resp.raw_response.headers.get_all("Content-Length")[0]) < 550):
+    #     d.blacklistURL.add(url)
+    #     print("+++++++++++++++++++++++++++++") 
+    #     return list()
+    elif "text" not in (requests.get(url, stream=True).headers['Content-type']):
+        d.blacklistURL.add(url)
+        print("###########################")
+        return list()
         
 
     #Implementation requred.
@@ -46,7 +51,11 @@ def extract_next_links(url, resp):
 
     #print(url)
     #print(soup.get_text())
-
+    if len(webtext) < 100 or len(webtext) > 100000:
+        d.blacklistURL.add(url)
+        return
+    
+        
 
     # this will tokenize the webtext
     util.tokenize(webtext)
@@ -64,7 +73,7 @@ def extract_next_links(url, resp):
 
     #for link in links:
         #print (link)
-
+    printList()
     d.scraped.add(url)
     return list(links)
 
@@ -85,7 +94,7 @@ def is_valid(url):
             return 
         if url in d.blacklistURL:
             return False
-        if "?share=" in url
+        if "?share=" in url:
             return False
         if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -117,4 +126,7 @@ def printList():
     for word in d.unique_urls:
         f.write(word + "\n")
 
+    f.write("\n\n\n\nBLACKLISTED URLS\n")
+    for word in d.blacklistURL:
+        f.write(word + "\n")
     f.close()
