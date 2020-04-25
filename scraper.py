@@ -6,9 +6,7 @@ import time
 import utils.something as util
 from crawler.database import DataBase as d
 
-# scraped = set()  # set of urls we've extracted from or are blacklisted
-# seen = set()
-# unique_urls = set()
+lower_bound = 2000
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -17,27 +15,10 @@ def scraper(url, resp):
     else:
         return list()
 def extract_next_links(url, resp):
-    if (resp.status >= 400 or resp.status == 204) or (url in d.scraped):
+    if (resp.status >= 400 or resp.status == 204) or (url in d.scraped) or (url in d.blacklistURL):
         d.blacklistURL.add(url)
-        print("*******************************")
         return list()
 
-    # if (int(resp.raw_response.headers.get_all("Content-Length")[0]) > 150000):
-    #     d.blacklistURL.add(url)
-    #     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    #     return list()
-    # elif (int(resp.raw_response.headers.get_all("Content-Length")[0]) < 550):
-    #     d.blacklistURL.add(url)
-    #     print("+++++++++++++++++++++++++++++")
-    #     return list()
-    elif "text" not in (requests.get(url, stream=True).headers['Content-type']):
-        d.blacklistURL.add(url)
-        print("###########################")
-        return list()
-
-
-    #Implementation requred.
-    #print("in extract_next_links")
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
 
     for tag in soup(text=lambda text: isinstance(text,Comment)):
@@ -48,13 +29,12 @@ def extract_next_links(url, resp):
 
     #this is what to send to the tokenizer
     webtext = soup.get_text()
+    space_delemited_text = re.sub('\s+',' ',webtext)
 
-    #print(url)
-    #print(soup.get_text())
-    if len(webtext) < 100 or len(webtext) > 100000:
+    #reject webpages with less than 'lower_bound' characters. 
+    if len(space_delemited_text) <  lower_bound: 
         d.blacklistURL.add(url)
-        return
-
+        return list()
 
 
     # this will tokenize the webtext
