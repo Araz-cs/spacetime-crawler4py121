@@ -16,6 +16,7 @@ def scraper(url, resp):
         return list()
 def extract_next_links(url, resp):
     url = url.split('#')[0]
+    
     if (resp.status >= 400 or resp.status == 204) or (url in d.scraped) or (url in d.blacklistURL):
         d.blacklistURL.add(url)
         return list()
@@ -48,28 +49,19 @@ def extract_next_links(url, resp):
         childURL = link.get('href')
 
         if is_valid(childURL) and childURL not in d.seen:
-            #print(childURL)
             links.add(childURL)
             d.seen.add(childURL)
 
-    #for link in links:
-        #print (link)
-    printList()
     d.scraped.add(url)
     return list(links)
 
 
 def is_valid(url):
-    #valid_domains = [".ics.uci.edu", ".cs.uci.edu", ".informatics.uci.edu", ".stat.uci.edu", "today.uci.edu/department/information_computer_sciences"]
     try:
         parsed = urlparse(url)
 
         if parsed.scheme not in set(["http", "https", "today"]):
             return False
-       # if not any(x in parsed.netloc for x in valid_domains):
-        #    return False
-        #if parsed.netloc not in set(["www.ics.uci.edu", "www.cs.uci.edu", "www.informatics.uci.edu", "www.stat.uci.edu", "today.uci.edu/department/information_computer_sciences"]):
-         #   return False
         if not re.match(
             r'^(\w*.*)(ics.uci.edu|cs.uci.edu|stat.uci.edu|today.uci.edu\/department\/information_computer_sciences)$',parsed.netloc):
             return
@@ -95,19 +87,3 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
-
-# def printList():
-#     f = open("URLS.txt", "a")
-#
-#     for word in d.scraped:
-#         f.write(word + "\n")
-#
-#     f.write("\n\n\n\nUNIQUE URLS")
-#
-#     for word in d.unique_urls:
-#         f.write(word + "\n")
-#
-#     f.write("\n\n\n\nBLACKLISTED URLS\n")
-#     for word in d.blacklistURL:
-#         f.write(word + "\n")
-#     f.close()
