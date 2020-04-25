@@ -16,7 +16,7 @@ def scraper(url, resp):
         return list()
 def extract_next_links(url, resp):
     url = url.split('#')[0]
-    
+
     if (resp.status >= 400 or resp.status == 204) or (url in d.scraped) or (url in d.blacklistURL):
         d.blacklistURL.add(url)
         return list()
@@ -64,7 +64,7 @@ def is_valid(url):
             return False
         if not re.match(
             r'^(\w*.*)(ics.uci.edu|cs.uci.edu|stat.uci.edu|today.uci.edu\/department\/information_computer_sciences)$',parsed.netloc):
-            return
+            return False
         if url in d.blacklistURL:
             return False
         if "?share=" in url:
