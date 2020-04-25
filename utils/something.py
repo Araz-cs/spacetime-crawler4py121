@@ -2,9 +2,9 @@ from crawler.database import DataBase as d
 
 # utils.py
 
-    seen = set()
-    unique_urls = set()
-    blacklistURL= set()
+seen = set()
+unique_urls = set()
+blacklistURL= set()
 
 # tokenize function's runtime is O(n)
 def tokenize(texts):
@@ -33,19 +33,6 @@ def tokenize(texts):
             d.allTokens[i] += 1
         else:
             d.allTokens[i] = 1
-
-def printList():
-    f = open("URLS.txt", "a")
-
-    for word in d.scraped:
-        f.write(word + "\n")
-
-    f.write("\n\n\n\nUNIQUE URLS")
-
-    for word in d.unique_urls:
-        f.write(word + "\n")
-
-    f.close()
 
 stopWords = {"a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been",
 "before", "being", "below", "between", "both", "but", "by", "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down",
