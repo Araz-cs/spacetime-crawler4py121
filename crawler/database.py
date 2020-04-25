@@ -17,6 +17,10 @@ class DataBase:
         for word in DataBase.unique_urls:
             f.write(word + "\n")
 
+        f.write("\n\n\n\nBLACKLISTED URLS\n")
+        for word in DataBase.blacklistURL:
+            f.write(word + "\n")
+
         f.close()
 
     def __init__(self):

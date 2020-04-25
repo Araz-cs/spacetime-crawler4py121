@@ -5,7 +5,7 @@ import requests
 import time
 import utils.something as util
 from crawler.database import DataBase as d
- 
+
 # scraped = set()  # set of urls we've extracted from or are blacklisted
 # seen = set()
 # unique_urls = set()
@@ -14,7 +14,7 @@ def scraper(url, resp):
     links = extract_next_links(url, resp)
     if links != None:
         return [link for link in links if is_valid(link)]
-    else: 
+    else:
         return list()
 def extract_next_links(url, resp):
     if (resp.status >= 400 or resp.status == 204) or (url in d.scraped):
@@ -22,19 +22,19 @@ def extract_next_links(url, resp):
         print("*******************************")
         return list()
 
-    # if (int(resp.raw_response.headers.get_all("Content-Length")[0]) > 150000): 
+    # if (int(resp.raw_response.headers.get_all("Content-Length")[0]) > 150000):
     #     d.blacklistURL.add(url)
-    #     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@") 
+    #     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     #     return list()
     # elif (int(resp.raw_response.headers.get_all("Content-Length")[0]) < 550):
     #     d.blacklistURL.add(url)
-    #     print("+++++++++++++++++++++++++++++") 
+    #     print("+++++++++++++++++++++++++++++")
     #     return list()
     elif "text" not in (requests.get(url, stream=True).headers['Content-type']):
         d.blacklistURL.add(url)
         print("###########################")
         return list()
-        
+
 
     #Implementation requred.
     #print("in extract_next_links")
@@ -54,8 +54,8 @@ def extract_next_links(url, resp):
     if len(webtext) < 100 or len(webtext) > 100000:
         d.blacklistURL.add(url)
         return
-    
-        
+
+
 
     # this will tokenize the webtext
     util.tokenize(webtext)
@@ -91,7 +91,7 @@ def is_valid(url):
          #   return False
         if not re.match(
             r'^(\w*.*)(ics.uci.edu|cs.uci.edu|stat.uci.edu|today.uci.edu\/department\/information_computer_sciences)$',parsed.netloc):
-            return 
+            return
         if url in d.blacklistURL:
             return False
         if "?share=" in url:
@@ -115,18 +115,18 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
-def printList():
-    f = open("URLS.txt", "a")
-
-    for word in d.scraped:
-        f.write(word + "\n")
-
-    f.write("\n\n\n\nUNIQUE URLS")
-
-    for word in d.unique_urls:
-        f.write(word + "\n")
-
-    f.write("\n\n\n\nBLACKLISTED URLS\n")
-    for word in d.blacklistURL:
-        f.write(word + "\n")
-    f.close()
+# def printList():
+#     f = open("URLS.txt", "a")
+#
+#     for word in d.scraped:
+#         f.write(word + "\n")
+#
+#     f.write("\n\n\n\nUNIQUE URLS")
+#
+#     for word in d.unique_urls:
+#         f.write(word + "\n")
+#
+#     f.write("\n\n\n\nBLACKLISTED URLS\n")
+#     for word in d.blacklistURL:
+#         f.write(word + "\n")
+#     f.close()
