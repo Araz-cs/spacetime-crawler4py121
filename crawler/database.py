@@ -3,9 +3,6 @@ class DataBase:
     scraped = set()  # set of urls we've extracted from or are blacklisted
     seen = set()
     unique_urls = set()
-    blacklistURL= set()
-
-    
 
 
     def __init__(self):
@@ -13,17 +10,16 @@ class DataBase:
         self.scraped = set()
         self.seen = set()
         self.unique_urls = set()
-        self.blacklistURL = set()
 
-    # def printList():
-    #     f = open("URLS.txt", "a")
+    def printList():
+        f = open("URLS.txt", "a")
 
-    #     for word in d.scraped:
-    #         f.write(word + "\n")
+        for word in d.scraped:
+            f.write(word + "\n")
 
-    #     f.write("\n\n\n\nUNIQUE URLS")
+        f.write("\n\n\n\nUNIQUE URLS")
 
-    #     for word in d.unique_urls:
-    #         f.write(word + "\n")
+        for word in d.unique_urls:
+            f.write(word + "\n")
 
-    #     f.close()
+        f.close()
