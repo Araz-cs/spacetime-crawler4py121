@@ -15,6 +15,7 @@ def scraper(url, resp):
     else:
         return list()
 def extract_next_links(url, resp):
+    url = url.split('#')[0]
     if (resp.status >= 400 or resp.status == 204) or (url in d.scraped) or (url in d.blacklistURL):
         d.blacklistURL.add(url)
         return list()
