@@ -6,6 +6,7 @@ from utils.config import Config
 from crawler import Crawler
 # from scraper import printList
 from crawler.database import DataBase as d
+from utils.something import problem3
 
 def main(config_file, restart):
     cparser = ConfigParser()
@@ -15,6 +16,8 @@ def main(config_file, restart):
     crawler = Crawler(config, restart)
     crawler.start()
     d.printList()
+    problem3()
+
 
 
 

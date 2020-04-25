@@ -2,9 +2,7 @@ from crawler.database import DataBase as d
 
 # utils.py
 
-seen = set()
-unique_urls = set()
-blacklistURL= set()
+
 
 # tokenize function's runtime is O(n)
 def tokenize(texts):
@@ -52,6 +50,6 @@ def problem3():
         if k not in stopWords:
             f.write(k + "=" + str(v))
             counter += 1
-        if counter == 50:
+        if counter == 70:
             break
     f.close()
