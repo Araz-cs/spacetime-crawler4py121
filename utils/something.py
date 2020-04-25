@@ -2,7 +2,9 @@ from crawler.database import DataBase as d
 
 # utils.py
 
-
+    seen = set()
+    unique_urls = set()
+    blacklistURL= set()
 
 # tokenize function's runtime is O(n)
 def tokenize(texts):

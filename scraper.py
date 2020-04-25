@@ -5,11 +5,10 @@ import requests
 import time
 import utils.something as util
 from crawler.database import DataBase as d
-
+ 
 # scraped = set()  # set of urls we've extracted from or are blacklisted
 # seen = set()
 # unique_urls = set()
-
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -17,7 +16,20 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     if (resp.status >= 400 or resp.status == 204) or (url in d.scraped):
-        return list()
+        d.blacklistURL.add(url)
+        return
+
+    if (resp.raw_response.status_code <= 200 ):
+        if (int(resp.raw_response.headers._store["content-length"][1]) > 150000): 
+            d.blacklistURL.add(url) 
+            return
+        elif (int(resp.raw_response.headers._store["content-length"][1]) < 550): 
+            d.blacklistURL.add(url)
+            return
+        elif "text" not in (resp.raw_response.headers._store["content-type"]):
+            d.blacklistURL.add(url)
+            return
+        
 
     #Implementation requred.
     #print("in extract_next_links")
@@ -37,7 +49,7 @@ def extract_next_links(url, resp):
 
 
     # this will tokenize the webtext
-    # util.tokenize(webtext)
+    util.tokenize(webtext)
 
     links = set()
 
@@ -70,6 +82,10 @@ def is_valid(url):
          #   return False
         if not re.match(
             r'^(\w*.*)(ics.uci.edu|cs.uci.edu|stat.uci.edu|today.uci.edu\/department\/information_computer_sciences)$',parsed.netloc):
+            return 
+        if url in d.blacklistURL:
+            return False
+        if "?share=" in url
             return False
         if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
