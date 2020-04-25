@@ -5,8 +5,19 @@ class DataBase:
     unique_urls = set()
     blacklistURL= set()
 
-    
+    @staticmethod
+    def printList():
+        f = open("URLS.txt", "a")
 
+        for word in DataBase.scraped:
+            f.write(word + "\n")
+
+        f.write("\n\n\n\nUNIQUE URLS")
+
+        for word in DataBase.unique_urls:
+            f.write(word + "\n")
+
+        f.close()
 
     def __init__(self):
         self.allTokens = dict()
@@ -14,16 +25,3 @@ class DataBase:
         self.seen = set()
         self.unique_urls = set()
         self.blacklistURL = set()
-
-    # def printList():
-    #     f = open("URLS.txt", "a")
-
-    #     for word in d.scraped:
-    #         f.write(word + "\n")
-
-    #     f.write("\n\n\n\nUNIQUE URLS")
-
-    #     for word in d.unique_urls:
-    #         f.write(word + "\n")
-
-    #     f.close()
