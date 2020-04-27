@@ -49,6 +49,7 @@ def extract_next_links(url, resp):
         childURL = link.get('href')
 
         if is_valid(childURL) and childURL not in d.seen:
+            childURL = childURL.split('#')[0]
             links.add(childURL)
             d.seen.add(childURL)
 
