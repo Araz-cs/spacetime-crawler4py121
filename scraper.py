@@ -15,7 +15,7 @@ def scraper(url, resp):
     else:
         return list()
 def extract_next_links(url, resp):
-    url = url.split('#')[0]
+    # url = url.split('#')[0]
 
     if (resp.status >= 400 or resp.status == 204) or (url in d.scraped) or (url in d.blacklistURL):
         d.blacklistURL.add(url)
@@ -70,6 +70,16 @@ def is_valid(url):
         if url in d.blacklistURL:
             return False
         if "?share=" in url:
+            return False
+        if "pdf" in url:
+            return False
+        if "redirect" in url:
+            return False
+        if "#comment" in url:
+            return False
+        if "#respond" in url:
+            return False
+        if "#comments" in url:
             return False
         if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
