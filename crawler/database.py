@@ -23,8 +23,8 @@ class DataBase:
             f.write(word + "\n")
 
         f.write("\n\n\n\nLONGEST PAGE(IN TERMS OF NUMBER OF WORDS)\n")
-        f.write("Website URL: " + str(maxWords[0]) + "\n")
-        f.write("Number of words: " + str(maxWords[1]) + "\n")
+        f.write("Website URL: " + str(DataBase.maxWords[0]) + "\n")
+        f.write("Number of words: " + str(DataBase.maxWords[1]) + "\n")
 
         f.close()
 
