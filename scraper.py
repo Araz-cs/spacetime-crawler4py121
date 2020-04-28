@@ -65,7 +65,7 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https", "today"]):
             return False
         if not re.match(
-            r'^(\w*.*)(ics.uci.edu|cs.uci.edu|stat.uci.edu|today.uci.edu\/department\/information_computer_sciences)$',parsed.netloc):
+            r'^(\w*.)(ics.uci.edu|cs.uci.edu|stat.uci.edu|today.uci.edu\/department\/information_computer_sciences)$',parsed.netloc):
             return False
         if url in d.blacklistURL:
             return False
