@@ -33,14 +33,14 @@ def extract_next_links(url, resp):
     webtext = soup.get_text()
     space_delemited_text = re.sub('\s+',' ',webtext)
 
-    #reject webpages with less than 'lower_bound' characters. 
-    if len(space_delemited_text) <  lower_bound: 
+    #reject webpages with less than 'lower_bound' characters.
+    if len(space_delemited_text) <  lower_bound:
         d.blacklistURL.add(url)
         return list()
 
 
     # this will tokenize the webtext
-    util.tokenize(webtext)
+    util.tokenize(url, webtext)
 
     links = set()
 

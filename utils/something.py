@@ -5,7 +5,7 @@ from crawler.database import DataBase as d
 
 
 # tokenize function's runtime is O(n)
-def tokenize(texts):
+def tokenize(url, texts):
 # I used the split method to check if file is
 
     termList = []
@@ -31,6 +31,13 @@ def tokenize(texts):
             d.allTokens[i] += 1
         else:
             d.allTokens[i] = 1
+
+
+    # checks if it has more words than the current maximum
+    if len(termList) > d.maxWords[1]:
+        d.maxWords[0] = url
+        d.maxWords[1] = len(termList)
+        
 
 stopWords = {"a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren't", "as", "at", "be", "because", "been",
 "before", "being", "below", "between", "both", "but", "by", "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down",

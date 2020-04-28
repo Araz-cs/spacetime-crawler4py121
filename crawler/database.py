@@ -4,6 +4,7 @@ class DataBase:
     seen = set()
     unique_urls = set()
     blacklistURL= set()
+    maxWords = ["", 0] # maxWords[0] is URL, maxWords[1] is number of words
 
     @staticmethod
     def printList():
@@ -21,6 +22,10 @@ class DataBase:
         for word in DataBase.blacklistURL:
             f.write(word + "\n")
 
+        f.write("\n\n\n\nLONGEST PAGE(IN TERMS OF NUMBER OF WORDS)\n")
+        f.write("Website URL: " + str(maxwords[0]) + "\n")
+        f.write("Number of words: " + str(maxwords[1]) + "\n")
+
         f.close()
 
     def __init__(self):
@@ -29,3 +34,4 @@ class DataBase:
         self.seen = set()
         self.unique_urls = set()
         self.blacklistURL = set()
+        self.maxWords = ["", 0]
